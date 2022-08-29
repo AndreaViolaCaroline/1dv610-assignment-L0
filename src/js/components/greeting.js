@@ -50,7 +50,12 @@ customElements.define('greeting-user',
  */
   class extends HTMLElement {
     /**
-     * Submit name button.
+     * The input field.
+     */
+    inputField
+
+    /**
+     * the submit button.
      */
     submitBtn
 
@@ -67,6 +72,7 @@ customElements.define('greeting-user',
         .appendChild(template.content.cloneNode(true))
 
       // Get necessary elements in shadowroot.
+      this.inputField = this.shadowRoot.querySelector('#input-name')
       this.submitBtn = this.shadowRoot.querySelector('#submit-btn')
 
       this.submitBtn.addEventListener('click', () => {
@@ -78,7 +84,7 @@ customElements.define('greeting-user',
      * Get the inserted name.
      */
     getName () {
-      console.log('You clicked')
+      console.log(this.inputField.value)
     }
   }
 )
