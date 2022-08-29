@@ -13,8 +13,26 @@ template.innerHTML = `
     }
 
     #header {
-      color: #6b8e23;
+      color: #8E4585;
       font-size: 2em;
+    }
+
+    #input-name {
+      font-size: 1.5em;
+    }
+
+    #submit-btn {
+      font-size: 1.5em;
+      background-color: #8E4585;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 3px; 
+    }
+
+    #submit-btn:hover {
+      box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+      cursor: pointer;
     }
 
   </style>
@@ -22,7 +40,7 @@ template.innerHTML = `
   <div id="container">
     <h2 id="header">Greetings</h2>
     <input id="input-name" type="text" />
-    <button type="submit" id="submit-name">Submit name</button>
+    <button type="submit" id="submit-btn">Submit name</button>
   </div>
 `
 
@@ -31,6 +49,11 @@ customElements.define('greeting-user',
  * Represents the greeting element.
  */
   class extends HTMLElement {
+    /**
+     * Submit name button.
+     */
+    submitBtn
+
     /**
      * Creates an instance of the current type.
      *
@@ -42,6 +65,20 @@ customElements.define('greeting-user',
       // append the template to the shadow root.
       this.attachShadow({ mode: 'open' })
         .appendChild(template.content.cloneNode(true))
+
+      // Get necessary elements in shadowroot.
+      this.submitBtn = this.shadowRoot.querySelector('#submit-btn')
+
+      this.submitBtn.addEventListener('click', () => {
+        this.getName()
+      })
+    }
+
+    /**
+     * Get the inserted name.
+     */
+    getName () {
+      console.log('You clicked')
     }
   }
 )
