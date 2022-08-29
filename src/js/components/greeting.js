@@ -41,6 +41,7 @@ template.innerHTML = `
     <h2 id="header">Greetings</h2>
     <input id="input-name" type="text" />
     <button type="submit" id="submit-btn">Submit name</button>
+    <p id="greeting-msg"></p>
   </div>
 `
 
@@ -55,9 +56,14 @@ customElements.define('greeting-user',
     inputField
 
     /**
-     * the submit button.
+     * The submit button.
      */
     submitBtn
+
+    /**
+     * The greeting message area.
+     */
+    greetingMsg
 
     /**
      * Creates an instance of the current type.
@@ -74,6 +80,7 @@ customElements.define('greeting-user',
       // Get necessary elements in shadowroot.
       this.inputField = this.shadowRoot.querySelector('#input-name')
       this.submitBtn = this.shadowRoot.querySelector('#submit-btn')
+      this.greetingMsg = this.shadowRoot.querySelector('#greeting-msg')
 
       this.submitBtn.addEventListener('click', () => {
         this.getName()
@@ -84,6 +91,7 @@ customElements.define('greeting-user',
      * Get the inserted name.
      */
     getName () {
+      this.greetingMsg.textContent = this.inputField.value
       console.log(this.inputField.value)
     }
   }
