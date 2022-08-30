@@ -39,6 +39,7 @@ template.innerHTML = `
 
     #greeting-msg {
       font-size: 1.5em;
+      white-space: pre-line;
     }
 
   </style>
@@ -72,6 +73,11 @@ customElements.define('greeting-user',
     userName
 
     /**
+     * The fun fact.
+     */
+    funFact
+
+    /**
      * The greeting message area.
      */
     greetingMsg
@@ -80,7 +86,7 @@ customElements.define('greeting-user',
      * Creates an instance of the current type.
      *
      */
-    constructor() {
+    constructor () {
       super()
 
       // Attach a shadow DOM tree to this element and
@@ -94,7 +100,7 @@ customElements.define('greeting-user',
       this.greetingMsg = this.shadowRoot.querySelector('#greeting-msg')
 
       this.submitBtn.addEventListener('click', () => {
-        this.printGreeting(this.getName())
+        this.fetchFunFact()
       })
     }
 
@@ -111,8 +117,20 @@ customElements.define('greeting-user',
     /**
      * Fetch fun fact.
      */
-    fetchFunFact () {
+    async fetchFunFact () {
+      try {
+        const response = await axios.get('https://api.api-ninjas.com/v1/facts?limit=1', {
+          headers: { 'X-Api-Key': 'k7KvF8ev+bvMTGkUwch4Ng==WqpGjfAGOyE4k2sb' },
+          contentType: 'application/json'
+        })
 
+        this.funFact = response.data[0].fact
+
+        this.printGreeting(this.getName())
+      } catch (error) {
+        console.error(error)
+        this.greetingMsg.textContent = 'Ooops something went wrong, try again!'
+      }
     }
 
     /**
@@ -121,11 +139,12 @@ customElements.define('greeting-user',
      * @param {string} name - The name inserted.
      */
     printGreeting (name) {
-      this.greetingMsg.textContent = 'Hi there '
+      this.greetingMsg.textContent = 'Hi there!\r\n'
+      this.greetingMsg.textContent += '\r\nDid you know that: \r\n\r\n' + this.funFact + '. \r\n\r\nNow you know! So long '
       for (let i = 0; i < name.length; i++) {
         setTimeout(() => {
           this.greetingMsg.textContent += name.charAt(i)
-        }, 2000 * i)
+        }, 700 * i)
       }
     }
   }
