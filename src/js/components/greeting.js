@@ -1,3 +1,5 @@
+import axios from 'axios'
+
 /**
  * The greeting web component module
  *
@@ -35,10 +37,14 @@ template.innerHTML = `
       cursor: pointer;
     }
 
+    #greeting-msg {
+      font-size: 1.5em;
+    }
+
   </style>
   
   <div id="container">
-    <h2 id="header">Greetings</h2>
+    <h2 id="header">Greetings!</h2>
     <input id="input-name" type="text" />
     <button type="submit" id="submit-btn">Submit name</button>
     <p id="greeting-msg"></p>
@@ -46,9 +52,9 @@ template.innerHTML = `
 `
 
 customElements.define('greeting-user',
-/**
- * Represents the greeting element.
- */
+  /**
+   * Represents the greeting element.
+   */
   class extends HTMLElement {
     /**
      * The input field.
@@ -61,6 +67,11 @@ customElements.define('greeting-user',
     submitBtn
 
     /**
+     * The users name.
+     */
+    userName
+
+    /**
      * The greeting message area.
      */
     greetingMsg
@@ -69,7 +80,7 @@ customElements.define('greeting-user',
      * Creates an instance of the current type.
      *
      */
-    constructor () {
+    constructor() {
       super()
 
       // Attach a shadow DOM tree to this element and
@@ -83,16 +94,39 @@ customElements.define('greeting-user',
       this.greetingMsg = this.shadowRoot.querySelector('#greeting-msg')
 
       this.submitBtn.addEventListener('click', () => {
-        this.getName()
+        this.printGreeting(this.getName())
       })
     }
 
     /**
      * Get the inserted name.
+     *
+     * @returns {string} - The user's name.
      */
     getName () {
-      this.greetingMsg.textContent = this.inputField.value
-      console.log(this.inputField.value)
+      this.userName = this.inputField.value
+      return this.userName
+    }
+
+    /**
+     * Fetch fun fact.
+     */
+    fetchFunFact () {
+
+    }
+
+    /**
+     * Print out letters in name one by one.
+     *
+     * @param {string} name - The name inserted.
+     */
+    printGreeting (name) {
+      this.greetingMsg.textContent = 'Hi there '
+      for (let i = 0; i < name.length; i++) {
+        setTimeout(() => {
+          this.greetingMsg.textContent += name.charAt(i)
+        }, 2000 * i)
+      }
     }
   }
 )

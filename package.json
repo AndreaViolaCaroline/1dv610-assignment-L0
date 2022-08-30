@@ -17,5 +17,8 @@
   "devDependencies": {
     "@lnu/eslint-config": "^1.1.4",
     "vite": "^2.6.7"
+  },
+  "dependencies": {
+    "axios": "^0.27.2"
   }
 }
