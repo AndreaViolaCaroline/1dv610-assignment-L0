@@ -19,6 +19,11 @@ template.innerHTML = `
       font-size: 2em;
     }
 
+    h3 {
+      letter-spacing: 1.5px;
+      font-weight: 150;
+    }
+
     #input-name {
       font-size: 1.5em;
     }
@@ -37,19 +42,33 @@ template.innerHTML = `
       cursor: pointer;
     }
 
+    #bucketlist-msg {
+      margin-top: 50px;
+      color: #8E4585;
+      font-size: 1.7em;
+      letter-spacing: 1.5px;
+      font-weight: 150;
+    }
+
     #greeting-msg {
       font-size: 1.2em;
       white-space: pre-line;
+    }
+
+    .hidden {
+      display: none;
     }
 
   </style>
   
   <div id="container">
     <h2 id="header">Greetings!</h2>
+    <h3>Build your bucketlist</h3>
     <input id="input-name" type="text" />
     <button type="submit" id="submit-btn">Submit name</button>
+    <p id="bucketlist-msg"></p>
     <p id="greeting-msg"></p>
-    <button type="submit" id="Go Again">Clear</button>
+    <button type="submit" id="clear-btn">Clear</button>
   </div>
 `
 
@@ -69,12 +88,17 @@ customElements.define('greeting-user',
     submitBtn
 
     /**
+     * The clear button.
+     */
+    clearBtn
+
+    /**
      * The users name.
      */
     userName
 
     /**
-     * The fun fact.
+     * The bucketlist item.
      */
     bucketListItem
 
@@ -82,6 +106,11 @@ customElements.define('greeting-user',
      * The greeting message area.
      */
     greetingMsg
+
+    /**
+     * The timer.
+     */
+    nameTimeOut
 
     /**
      * Creates an instance of the current type.
@@ -99,10 +128,24 @@ customElements.define('greeting-user',
       this.inputField = this.shadowRoot.querySelector('#input-name')
       this.submitBtn = this.shadowRoot.querySelector('#submit-btn')
       this.greetingMsg = this.shadowRoot.querySelector('#greeting-msg')
+      this.bucketListMsg = this.shadowRoot.querySelector('#bucketlist-msg')
+      this.clearBtn = this.shadowRoot.querySelector('#clear-btn')
 
       this.submitBtn.addEventListener('click', () => {
         this.fetchBucketListItem()
       })
+
+      this.clearBtn.addEventListener('click', () => {
+        clearTimeout(this.nameTimeOut)
+        this.clearAll()
+      })
+    }
+
+    /**
+     * Runs when element is inserted in DOM.
+     */
+    connectedCallback () {
+      this.clearBtn.classList.add('hidden')
     }
 
     /**
@@ -128,6 +171,7 @@ customElements.define('greeting-user',
         this.bucketListItem = response.data.item
 
         this.printGreeting(this.getName())
+        this.clearBtn.classList.remove('hidden')
       } catch (error) {
         console.error(error)
         this.greetingMsg.textContent = 'Ooops something went wrong, try again!'
@@ -140,13 +184,23 @@ customElements.define('greeting-user',
      * @param {string} name - The name inserted.
      */
     printGreeting (name) {
-      this.greetingMsg.textContent = 'Hi there!\r\n'
-      this.greetingMsg.textContent += '\r\nAdd this to your bucket list! \r\n\r\n' + this.bucketListItem + '. \r\n\r\nJust do it! So long '
+      this.bucketListMsg.textContent = this.bucketListItem
+      this.greetingMsg.textContent = '\r\nJust do it! So long '
       for (let i = 0; i < name.length; i++) {
-        setTimeout(() => {
+        this.nameTimeOut = setTimeout(() => {
           this.greetingMsg.textContent += name.charAt(i)
         }, 800 * i)
       }
+    }
+
+    /**
+     * Clears all information.
+     */
+    clearAll () {
+      this.inputField.value = ''
+      this.bucketListMsg.textContent = ''
+      this.greetingMsg.textContent = ''
+      this.clearBtn.classList.add('hidden')
     }
   }
 )
