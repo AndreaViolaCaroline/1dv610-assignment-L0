@@ -23,7 +23,7 @@ template.innerHTML = `
       font-size: 1.5em;
     }
 
-    #submit-btn {
+    button {
       font-size: 1.5em;
       background-color: #8E4585;
       color: white;
@@ -32,13 +32,13 @@ template.innerHTML = `
       padding: 3px; 
     }
 
-    #submit-btn:hover {
+    button:hover {
       box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
       cursor: pointer;
     }
 
     #greeting-msg {
-      font-size: 1.5em;
+      font-size: 1.2em;
       white-space: pre-line;
     }
 
@@ -49,6 +49,7 @@ template.innerHTML = `
     <input id="input-name" type="text" />
     <button type="submit" id="submit-btn">Submit name</button>
     <p id="greeting-msg"></p>
+    <button type="submit" id="Go Again">Clear</button>
   </div>
 `
 
@@ -75,7 +76,7 @@ customElements.define('greeting-user',
     /**
      * The fun fact.
      */
-    funFact
+    bucketListItem
 
     /**
      * The greeting message area.
@@ -100,7 +101,7 @@ customElements.define('greeting-user',
       this.greetingMsg = this.shadowRoot.querySelector('#greeting-msg')
 
       this.submitBtn.addEventListener('click', () => {
-        this.fetchFunFact()
+        this.fetchBucketListItem()
       })
     }
 
@@ -115,16 +116,16 @@ customElements.define('greeting-user',
     }
 
     /**
-     * Fetch fun fact.
+     * Fetch bucketlist item.
      */
-    async fetchFunFact () {
+    async fetchBucketListItem () {
       try {
-        const response = await axios.get('https://api.api-ninjas.com/v1/facts?limit=1', {
+        const response = await axios.get('https://api.api-ninjas.com/v1/bucketlist', {
           headers: { 'X-Api-Key': 'k7KvF8ev+bvMTGkUwch4Ng==WqpGjfAGOyE4k2sb' },
           contentType: 'application/json'
         })
 
-        this.funFact = response.data[0].fact
+        this.bucketListItem = response.data.item
 
         this.printGreeting(this.getName())
       } catch (error) {
@@ -140,11 +141,11 @@ customElements.define('greeting-user',
      */
     printGreeting (name) {
       this.greetingMsg.textContent = 'Hi there!\r\n'
-      this.greetingMsg.textContent += '\r\nDid you know that: \r\n\r\n' + this.funFact + '. \r\n\r\nNow you know! So long '
+      this.greetingMsg.textContent += '\r\nAdd this to your bucket list! \r\n\r\n' + this.bucketListItem + '. \r\n\r\nJust do it! So long '
       for (let i = 0; i < name.length; i++) {
         setTimeout(() => {
           this.greetingMsg.textContent += name.charAt(i)
-        }, 700 * i)
+        }, 800 * i)
       }
     }
   }
